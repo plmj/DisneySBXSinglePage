@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Disney Order</title>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/main.css" rel="stylesheet">   
+  </head>
+
+  <body>
+  	<nav>
+			<ul>
+				<li><a href="index.html">Checkout</a></li>
+				<li><a href="giveGift.html">Give a gift (UK)</a></li>
+				<li><a href="redeemGift.html">Redeem a gift</a></li>
+				<!--<li><a href="paypal.html">PayPal</a></li>
+				<li><a href="redeemProduct.html">Redeem a code</a></li>-->
+				<li><a href="accountManagement.html">Profile</a></li>
+			</ul>
+		</nav>
+  	<div class="orderCompletedError" style="display:none">
+  		There's Been An Error<br />
+  		This User Is Probably Already Subscribed<br />
+  		Please Contact Michael Jan For More Info		
+  	</div>
+  	<div class="orderCompleted" style="display:none;">
+  		Order Completed!<br />Enjoy Your Purchase.
+  	</div>
+  	<div class="purchaseDetails">
+  		Gift a UK subscription plan. Select a plan to get started!
+  	</div>
+  	<ul class="selectPricingPlans" style="display:none">
+  	</ul>
+		<form class="form-horizontal" style="display:none;">
+			<div class="form-section clearfix">
+				<h1 class="form-title">Profile</h1>
+				<div class="form-group">
+					<div class="col-md-12">
+				  	<label for="Name">Name</label>  			  
+				  	<input id="Name" name="Name" placeholder="Name" class="form-control input-md" required="" type="text">			    
+				  </div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-12">
+				  	<label for="Email">Email</label>  			  
+				  	<input id="Email" name="Email" placeholder="Email" class="form-control input-md" required="" type="text">			    
+				  </div>
+				</div>	
+				<div class="form-group">
+					<div class="col-md-12">
+				  	<label for="SWID">SWID</label>  			  
+				  	<input id="SWID" name="SWID" placeholder="SWID" class="form-control input-md" required="" type="text">			    
+				  </div>
+				</div>			
+			</div>
+			<div class="form-section clearfix">
+				<h1 class="form-title">Address</h1>
+				<div class="form-group">
+					<div class="col-md-12">
+				  	<label for="Address">Address</label>  			  
+				  	<input id="Address" name="Address" placeholder="Address" class="form-control input-md" required="" type="text">			    
+				  </div>
+				</div>	
+				<div class="form-group">
+					<div class="col-md-7">
+						<label for="City">City</label>  
+					  <div>
+					  	<input id="City" name="City" placeholder="Chicago" class="form-control input-md" required="" type="text">			    
+					  </div>
+					</div>
+					<div class="col-md-5">
+						<label for="Country">Country</label> 
+			  		<select id="Country" name="Country">
+					    <option selected="" disabled="" label="month" value="">Country</option>
+					    <option label="United Kingdom" value="GBR">UK</option>
+					    <option label="France" value="FRA">France</option>
+					    <option label="Italy" value="ITA">Italy</option>
+					    <option label="Germany" value="DEU">Germany</option>
+					    <option label="Spain" value="ESP">Spain</option>
+						</select>
+			  	</div>				  
+				</div>			
+			</div>	
+			<div class="form-section clearfix">
+				<h1 class="form-title">Payment</h1>
+				<div class="form-group">
+					<div class="col-md-8">
+						<label for="CreditCardNumber">Credit Card Number</label>  
+					  <div>
+					  	<input id="CreditCardNumber" name="CreditCardNumber" placeholder="1234 5678 9012 3456" class="form-control input-md" required="" type="tel">			    
+					  </div>
+					</div>
+					<div class="col-md-4">
+						<label for="CreditCardNumber">CVV</label>  
+					  <div>
+					  	<input id="CVV" name="CVV" placeholder="123" class="form-control input-md" required="" type="tel">			    
+					  </div>
+					</div>			  
+				</div>			
+				<div class="form-group">
+					<div class="col-md-7">
+						<label for="ExpirationDate">Expiration Date</label>  
+					  <div>
+					  	<div class="col-md-6 noMargin">
+					  		<select id="ExpirationDateMonth" name="ExpirationDateMonth">
+							    <option selected="" disabled="" label="month" value="">Month</option>
+							    <option label="1" value="01">1</option>
+							    <option label="2" value="02">2</option>
+							    <option label="3" value="03">3</option>
+							    <option label="4" value="04">4</option>
+							    <option label="5" value="05">5</option>
+							    <option label="6" value="06">6</option>
+							    <option label="7" value="07">7</option>
+							    <option label="8" value="08">8</option>
+							    <option label="9" value="09">9</option>
+							    <option label="10" value="10">10</option>
+							    <option label="11" value="11">11</option>
+							    <option label="12" value="12">12</option>
+								</select>
+					  	</div>
+					  	<div class="col-md-6 noMargin">
+					  		<select id="ExpirationDateYear" name="ExpirationDateYear">
+							    <option selected="" disabled="" label="year" value="">Year</option>
+							    <option label="2015" value="2015">2015</option>
+							    <option label="2016" value="2016">2016</option>
+							    <option label="2017" value="2017">2017</option>
+							    <option label="2018" value="2018">2018</option>
+							    <option label="2019" value="2019">2019</option>
+							    <option label="2020" value="2020">2020</option>
+							    <option label="2021" value="2021">2021</option>
+							    <option label="2022" value="2022">2022</option>
+							    <option label="2023" value="2023">2023</option>
+							    <option label="2024" value="2024">2024</option>
+							    <option label="2025" value="2025">2025</option>
+							    <option label="2026" value="2026">2026</option>
+							    <option label="2027" value="2027">2027</option>
+							    <option label="2028" value="2028">2028</option>
+							    <option label="2029" value="2029">2029</option>
+							    <option label="2030" value="2030">2030</option>
+							    <option label="2031" value="2031">2031</option>
+							    <option label="2032" value="2032">2032</option>
+							    <option label="2033" value="2033">2033</option>
+							    <option label="2034" value="2034">2034</option>							
+								</select>
+					  	</div>
+						    
+					  </div>
+					</div>			  
+				</div>	
+				<div class="form-section clearfix">
+					<h1 class="form-title">Gift Details</h1>
+					<div class="form-group">
+						<div class="col-md-12">
+					  	<label for="Name">Recipient Name</label>  			  
+					  	<input id="RecipientName" name="RecipientName" placeholder="Recipient Name" class="form-control input-md" required="" type="text">			    
+					  </div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-12">
+					  	<label for="Email">Recipient Email</label>  			  
+					  	<input id="RecipientEmail" name="RecipientEmail" placeholder="Recipient Email" class="form-control input-md" required="" type="text">			    
+					  </div>
+					</div>			
+				</div>
+			</div>
+
+			<div class="error" style="opacity:0;">Could not validate coupon code. Please try again.</div>
+			<div class="form-section clearfix">
+				<button id="Submit" name="Submit" class="btn btn-primary"><span>Gift!</span></button>
+			</div>
+		</form>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="./js/jquery.inputmask.js" type="text/javascript"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/disney.js"></script>
+  </body>
+</html>

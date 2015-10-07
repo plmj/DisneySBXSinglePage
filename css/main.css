@@ -1,0 +1,215 @@
+body {
+	background: #fff;
+	font-family: 'Montserrat', sans-serif;
+	padding: 30px 0 60px;
+}
+form {
+	max-width: 400px;
+	margin: 0 auto;
+	font-family: 'Montserrat', sans-serif;
+}
+h1 {
+	color: #000;
+	font-weight: bold;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 22px;
+}
+h2 {
+	font-size: 14px;
+	font-weight: bold;
+	color: #1FBAD6;
+	cursor: pointer;
+}
+label {
+	font-family: 'Montserrat', sans-serif;
+	color: #000;
+	text-transform: uppercase;
+}
+select {
+	height: 40px;
+	width: 100%;
+	line-height: 30px;
+	font-size: 14px;
+	text-align: center;
+	transition: all 0.3s linear 0s;
+}
+input[type="tel"]:focus,
+input[type="text"]:focus {
+  border: 1px solid #CCC;
+  outline: none;
+}
+input[type="tel"]:active,
+input[type="text"]:active {
+  border: 1px solid #CCC;
+  outline: nones;
+}
+nav {
+	position: absolute;
+	border: 1px solid #ccc;
+	right: 15px;
+	top: 15px;
+}
+nav ul {
+	padding: 5px;
+}
+nav ul li {
+	list-style: none;
+}
+nav ul li a:hover,
+nav ul li a:visited,
+nav ul li a:focus {
+	color: #286CCC;
+}
+nav ul li a:visited {
+	color: #808080;
+}
+.form-control {
+	line-height: 30px;
+	height: 40px;
+	background: #fff;
+	box-shadow: none;
+	border-radius: 0px;
+}
+.noMargin {
+	margin: 0px;
+	padding: 0px;
+	padding-right: 15px;
+}
+.noMargin select {
+	border: 1px solid #CCC;
+}
+.IPSOS,
+.purchaseDetails {
+	width: 400px;
+	padding: 40px;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 14px;
+	border: 1px solid #CCC;
+	margin-top: 40px;
+}
+.IPSOS,
+.pricingPlanSelect {
+	width: 400px;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 14px;
+	padding: 10px 0;
+}
+.IPSOS {
+	padding: 10px 20px;
+}
+.selectPricingPlans {
+	width: 400px;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 14px;
+	border: 1px solid #CCC;
+	padding: 10px 0;
+	min-height: 40px;
+}
+.selectPricingPlans li {
+	list-style: none;
+	font-size: 14px;
+	line-height: 28px;
+	cursor: pointer;
+}
+/*.selectPricingPlans li + li + li + li{
+	display: none;
+}*/
+.selectedPricingPlan {
+	color: #286CCC;
+	background: #f1f1f1;
+}
+.btn-primary {
+	width: 100%;
+	font-weight: bold;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active  {
+	background: #286090;
+	
+}
+.btn-primary  {
+	background: #286ccc;
+	margin-top: 15px;
+}
+.error {
+	color: darkred;
+	text-align: center;
+}
+.selfCertify,
+.payPalConfimation,
+.orderCompletedError,
+.orderCompleted{
+	width: 400px;
+	padding: 40px;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 14px;
+	border: 1px solid #CCC;
+	margin-top: 40px;
+}
+
+
+/* Credit Card Section */
+.creditCards {
+	max-width: 400px;
+	margin: 0px auto;
+	font-family: "Montserrat",sans-serif;
+}
+.creditCardsHeaderTitle {
+	float: left;
+}
+.creditCardsAction {
+	float: right;
+	margin: 20px 0 10px;
+	line-height: 25px;
+}
+.creditCardList {
+	padding: 0px;
+	list-style: none;
+}
+.creditCardListEntryHeader {
+	padding: 10px 0px;
+}
+.creditCardListEntryDetails {
+	
+}
+.creditCardListEntryDetails li {
+	list-style: none;
+}
+.creditCardListEntryDetailsAddress{
+	padding: 0px;
+	float: left;
+}
+.creditCardListEntryDetailsAction {
+	padding: 0px;
+	float: right;
+}
+.creditCardListEntryDetailsAction li {
+	clear: both;
+	text-align: right;
+}
+.subscription {
+	max-width: 400px;
+	margin: 0px auto;
+	font-family: "Montserrat",sans-serif;
+}
+.currentSubscriptionHeaderTitle {
+	float: left;
+}
+.currentSubscriptionRenewalToggle {
+	float: right;
+	line-height: 20px;
+	margin: 24px 0 10px;
+	vertical-align: bottom;
+	cursor: pointer;
+	color:#1FBAD6;
+}
+.cancelSubscription {
+	margin: 20px 0 10px;
+	cursor: pointer;
+	color:#1FBAD6;
+}
