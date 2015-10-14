@@ -565,14 +565,28 @@ $(function() {
 			},1000);
 		break;
 		case "giveGift.html":
+            $(document).on('click','.subscriberStatusNo',function(){
+                $('.subscriberStatusContainer').hide();
+                $('.giftAsAnonymousContainer').fadeIn();
+            });
+            $(document).on('click','.subscriberStatusYes',function(){
+                $('.subscriberStatusContainer').hide();
+                $('.giftAsExistingContainer').fadeIn();
+            })
+
 			retrieveAvailableProductsForCountry('','UKHorizon',true);
-			$("#CreditCardNumber").inputmask("mask", {
-				"mask" : "9999 9999 9999 9999"
-			});
-			$(document).on('click', '#Submit', function(event) {
+            $(".giftAsAnonymousContainer #CreditCardNumber").inputmask("mask", {
+                "mask" : "9999 9999 9999 9999"
+            });
+            $(".giftAsExistingContainer #CreditCardNumber").inputmask("mask", {
+                "mask" : "9999 9999 9999 9999"
+            });
+
+			$(document).on('click', '.giftAsAnonymousContainer #Submit', function(event) {
 				event.preventDefault();
+
 				if ($('.selectedPricingPlan').attr('cdppid') != undefined) {			
-					var inputObject = $('form').serializeArray();
+					var inputObject = $('.giftAsAnonymousContainer form').serializeArray();
 					var name = inputObject[0].value;
 					var email = inputObject[1].value;
 					var uniqueID = email + new Date().getTime();
@@ -613,8 +627,54 @@ $(function() {
 					alert('Pick a pricing plan!');
 				}
 				
-			});			
-		break;
+			});
+            $(document).on('click', '.giftAsExistingContainer #Submit', function(event) {
+                event.preventDefault();
+
+                if ($('.selectedPricingPlan').attr('cdppid') != undefined) {
+                    var inputObject = $('.giftAsExistingContainer form').serializeArray();
+                    var name = inputObject[0].value;
+                    var email = inputObject[1].value;
+                    var swid = inputObject[2].value;
+                    var address = inputObject[3].value;
+                    var city = inputObject[4].value;
+                    var country = inputObject[5].value;
+                    var creditCardNumber = inputObject[6].value;
+                    creditCardNumber = creditCardNumber.replace(/ /g, '');
+                    var cvv = inputObject[7].value;
+                    var month = inputObject[8].value;
+                    var year = inputObject[9].value;
+                    var recipientName = inputObject[10].value;
+                    var recipientEmail = inputObject[11].value;
+                    var sessionId = '';
+                    var pricingPlanId = $('.selectedPricingPlan').attr('cdppid');
+                    var productId = $('.selectedPricingPlan').attr('cdid');
+                    $.when(service.createSessionWithUpdate(swid, email, 'Gift')).then(function(createSessionOutput) {
+                        var result = JSON.parse(createSessionOutput);
+                        sessionId = result.SessionId;
+                        return service.submitGiftOrder(sessionId, address, city, country, creditCardNumber, cvv, month, year, name, productId, pricingPlanId, recipientEmail, recipientName, email, name);
+                    }).then(function(submitGiftOrderOutput) {
+                        var result = submitGiftOrderOutput;
+                        if (result.Fault != undefined && result.Fault != 'undefined') {
+                            $('.purchaseDetails').hide();
+                            $('form').hide();
+                            $('.selectPricingPlans').hide();
+                            $('.orderCompletedError').text(result.Fault.Message);
+                            $('.orderCompletedError').show();
+                        } else {
+                            $('.purchaseDetails').hide();
+                            $('form').hide();
+                            $('.selectPricingPlans').hide();
+                            $('.orderCompleted').show();
+                        }
+                    });
+                }
+                else if ($('.selectedPricingPlan').attr('cdppid') == undefined){
+                    alert('Pick a pricing plan!');
+                }
+
+            });
+            break;
 		case "giveKnownGift.html":
 			retrieveAvailableProductsForCountry('','UKHorizon',true);
 			$("#CreditCardNumber").inputmask("mask", {
@@ -897,8 +957,271 @@ $(function() {
 				var JSONObject = JSON.parse($('#JSON').val());
 			});
 		break;
+		case "redemption.html":
+			$(document).on('click', '#submitRedemptionCode', function() {
+                $('errorMessage').hide();
+				var code = $('#redemptionCode').val(),
+				couponType;
+
+                if (code != ''){
+                    if(code.search('CGN')==0 || code.search('SPO')==0){ // promo campaign || staff discount
+                        couponType = 'discount';
+                    }
+                    else if(code.search('VIP')==0){ // external VIP
+                        couponType = 'VIP';
+                    }
+                    else if(code.search('DGC')==0 || code.search('HORIZON')==0) { // digital gift
+                        couponType = 'digital';
+                    }
+                    else { // physical gift
+                        couponType = 'physical';
+                    }
+                    switch(couponType){
+                        case "discount": // discount [CGNSBXPromoDiscountTestCode]
+                            $.when(service.searchProductsByCoupon(code)).then(function(response) {
+                                if (typeof(response.Fault) != 'undefined'){
+                                    $('.errorMessage').fadeIn().text('Invalid Redemption Code.');
+                                }
+                                else {
+                                    var productId = response.Applications[0].ProductId;
+                                    var pricingPlanId = response.Applications[0].PricingPlanIds[0];
+                                    console.log('Product Id: ' + productId + ', Pricing Plan Id: ' + pricingPlanId);
+                                    $('.subscriberStatusContainer').fadeIn();
+                                    $(document).on('click','.subscriberStatusNo',function(){
+                                        window.location.href = "./join.html?discount&" + code+ "&" + productId + "&" + pricingPlanId;
+                                    });
+                                    $(document).on('click','.subscriberStatusYes',function(){
+                                        alert('Stacks on stacks on stacks. Coming soon!')
+                                    });
+
+                                }
+
+                            });
+                            break;
+                        case "digital": // digital gift
+                            $.when(service.previewGiftRedemptionOrderCodeOnly(code)).then(function(response) {
+                                if (typeof(response.Fault) != 'undefined'){
+                                    $('.errorMessage').fadeIn().text('Invalid Gift Code.');
+                                }
+                                else {
+                                    var productId = response.Subscriptions[0].Items[0].Product.Id;
+                                    var pricingPlanId = response.Subscriptions[0].Items[0].PricingPlan.Id;
+                                    console.log('Product Id: ' + productId + ', Pricing Plan Id: ' + pricingPlanId);
+
+                                    $('.subscriberStatusContainer').fadeIn();
+                                    $(document).on('click','.subscriberStatusNo',function(){
+                                        window.location.href = "./join.html?digital&" + code+ "&" + productId + "&" + pricingPlanId;
+                                    });
+                                    $(document).on('click','.subscriberStatusYes',function(){
+                                        alert('Stacks on stacks on stacks. Coming soon!')
+                                    });
+                                }
+                            });
+                            break;
+                        case "VIP": // external VIP [External VIP Coupon] [VIPDisneyExternalVIPTest]
+                            $.when(service.searchProductsByCoupon(code)).then(function(response) {
+                                if (typeof(response.Fault) != 'undefined'){
+                                    $('.errorMessage').fadeIn().text('Invalid Redemption Code.');
+                                }
+                                else {
+                                    var productId = response.Applications[0].ProductId;
+                                    var pricingPlanId = response.Applications[0].PricingPlanIds[0];
+                                    console.log('Product Id: ' + productId + ', Pricing Plan Id: ' + pricingPlanId);
+
+                                    $('.subscriberStatusContainer').fadeIn();
+                                    $(document).on('click','.subscriberStatusNo',function(){
+                                        window.location.href = "./join.html?VIP&" + code+ "&" + productId + "&" + pricingPlanId;
+                                    });
+                                    $(document).on('click','.subscriberStatusYes',function(){
+                                        alert('Stacks on stacks on stacks. Coming soon!')
+                                    });
+                                }
+
+                            });
+                        case "physical": // physical gift [Physical Gift Card Test 3 Month] [DisneyPhysicalGiftCardTest]
+                            $.when(service.searchProductsByCoupon(code)).then(function(response) {
+                                if (typeof(response.Fault) != 'undefined'){
+                                    $('.errorMessage').fadeIn().text('Invalid Redemption Code.');
+                                }
+                                else {
+                                    var productId = response.Applications[0].ProductId;
+                                    var pricingPlanId = response.Applications[0].PricingPlanIds[0];
+                                    console.log('Product Id: ' + productId + ', Pricing Plan Id: ' + pricingPlanId);
+
+                                    $('.subscriberStatusContainer').fadeIn();
+                                    $(document).on('click','.subscriberStatusNo',function(){
+                                        window.location.href = "./join.html?physical&" + code+ "&" + productId + "&" + pricingPlanId;
+                                    });
+                                    $(document).on('click','.subscriberStatusYes',function(){
+                                        alert('Stacks on stacks on stacks. Coming soon!')
+                                    });
+                                }
+                            });
+                            break;
+                    }
+                }
+
+			});
+			break;
+        case "join.html":
+            var queryString = location.search.split('&'),
+            pageType = queryString[0].slice(1),
+            redemptionCode = queryString[1],
+            productId = queryString[2],
+            productExternalReference = "UKHorizon",
+            pricingPlanId = queryString[3];
+
+            // Hard code to external reference since we know the value
+            $("#CreditCardNumber").inputmask("mask", {
+                "mask" : "9999 9999 9999 9999"
+            });
+
+            // Show form if arrived at page properly, redirect otherwise
+            if (queryString.length == 4 ){
+                $('form').fadeIn();
+            }
+            else {
+                window.location.href = "./redemption.html";
+            }
+
+            // Retrieve all of the data for this subscription for display purposes
+            $.when(service.retrieveProductWithExternalReference(productExternalReference)).then(function(response){
+                var data = retrieveProductData(response, pricingPlanId),
+                subscriptionType = data[0],
+                charge = data[1],
+                terms = data[2];
+
+                // Click event for submit
+                $(document).on('click', '#Submit', function(event){
+                    event.preventDefault();
+
+                    var inputObject = $('form').serializeArray(),
+                    name = inputObject[0].value,
+                    email = inputObject[1].value,
+                    swid = inputObject[2].value,
+                    address = inputObject[3].value,
+                    city = inputObject[4].value,
+                    country = inputObject[5].value,
+                    creditCardNumber = inputObject[6].value.replace(/ /g, ''),
+                    cvv = inputObject[7].value,
+                    month = inputObject[8].value,
+                    year = inputObject[9].value,
+                    sessionId = '';
+
+                    switch(pageType){
+                        case "discount":
+                            $.when(service.createSession(swid, email)).then(function(createSessionOutput) {
+                                result = JSON.parse(createSessionOutput);
+                                sessionId = result.SessionId;
+                                return service.submitOrder(sessionId, address, city, country, creditCardNumber, cvv, month, year, name, redemptionCode, productId, pricingPlanId);
+                            }).then(function(submitOrderOutput) {
+                                var result = submitOrderOutput;
+                                if (result.Fault != undefined && result.Fault != 'undefined' && result.Fault.Code == 920) {
+                                    // Wrong country but can't happen with new form
+                                }
+                                else if(result.Fault != undefined && result.Fault != 'undefined'){
+                                    $('form').hide();
+                                    $('.orderCompletedError').text(result.Fault.Message);
+                                    $('.orderCompletedError').show();
+
+                                }
+                                else {
+                                    $('form').hide();
+                                    $('.orderCompleted').show();
+                                }
+                            });
+                            break;
+                        case "physical":
+                            $.when(service.createSession(swid, email)).then(function(createSessionOutput) {
+                                result = JSON.parse(createSessionOutput);
+                                sessionId = result.SessionId;
+                                return service.submitOrder(sessionId, address, city, country, creditCardNumber, cvv, month, year, name, redemptionCode, productId, pricingPlanId);
+                            }).then(function(submitOrderOutput) {
+                                var result = submitOrderOutput;
+                                if (result.Fault != undefined && result.Fault != 'undefined' && result.Fault.Code == 920) {
+                                    // Wrong country but can't happen with new form
+                                }
+                                else if(result.Fault != undefined && result.Fault != 'undefined'){
+                                    $('form').hide();
+                                    $('.orderCompletedError').text(result.Fault.Message);
+                                    $('.orderCompletedError').show();
+
+                                }
+                                else {
+                                    $('form').hide();
+                                    $('.orderCompleted').show();
+                                }
+                             });
+                            break;
+                        case "VIP":
+                            $.when(service.createSession(swid, email)).then(function(createSessionOutput) {
+                                result = JSON.parse(createSessionOutput);
+                                sessionId = result.SessionId;
+                                return service.submitOrder(sessionId, address, city, country, creditCardNumber, cvv, month, year, name, redemptionCode, productId, pricingPlanId);
+                            }).then(function(submitOrderOutput) {
+                                var result = submitOrderOutput;
+                                if (result.Fault != undefined && result.Fault != 'undefined' && result.Fault.Code == 920) {
+                                    // Wrong country but can't happen with new form
+                                }
+                                else if(result.Fault != undefined && result.Fault != 'undefined'){
+                                    $('form').hide();
+                                    $('.orderCompletedError').text(result.Fault.Message);
+                                    $('.orderCompletedError').show();
+
+                                }
+                                else {
+                                    $('form').hide();
+                                    $('.orderCompleted').show();
+                                }
+                            });
+                            break;
+                        case "digital":
+                            $.when(service.createSession(swid, email)).then(function(createSessionOutput) {
+                                result = JSON.parse(createSessionOutput);
+                                sessionId = result.SessionId;
+                                return service.submitGiftRedemptionOrder(sessionId, address, city, country, creditCardNumber, cvv, month, year, name, redemptionCode);
+                            }).then(function(submitOrderOutput) {
+                                var result = submitOrderOutput;
+                                if (result.Fault != undefined && result.Fault != 'undefined' && result.Fault.Code == 920) {
+                                    // Wrong country but can't happen with new form
+                                }
+                                else if(result.Fault != undefined && result.Fault != 'undefined'){
+                                    $('form').hide();
+                                    $('.orderCompletedError').text(result.Fault.Message);
+                                    $('.orderCompletedError').show();
+
+                                }
+                                else {
+                                    $('form').hide();
+                                    $('.orderCompleted').show();
+                                }
+                            });
+                            break;
+                    }
+                });
+
+            });
+            break;
 	}
 });
+
+retrieveProductData = function(response, pricingPlanId){
+    var pricingPlanArray = response.Product.PricingPlans;
+
+    var data = []; // type, price, term (gift, 1.99, 1 month)
+    // Iterate through array and pick out the correct subscription
+    for ( var i = 0; i < pricingPlanArray.length; i++){
+        var current = pricingPlanArray[i];
+        if(current.Id == pricingPlanId) {
+            var planName = current.Name.split(' ');
+            data.push(planName[1]);
+            data.push(current.ChargeAmount);
+            data.push(planName[2]);
+        }
+    }
+    return data;
+}
+
 retrieveAvailableProducts = function(sessionId) {
 	var availablePricingPlanObject = {"PricingPlans":[]};
 	var pricingTemplate = '<li cdppid="{Id}" cdid="{Pid}">{Iteration} {Unit} - {Charge}</li>';
@@ -1529,7 +1852,7 @@ var api = new function () {
 	createSession = function(swid, email) {
 		jsonRequest = '';
 		$.ajax({ url: "PHP/functions.php",
-		data: {action: 'createSession', swid: swid, email: email, login: swid, fName: swid, lName: swid, device: 16},
+		data: {action: 'createSession', swid: swid, email: email, login: email, fName: swid, lName: swid, device: 16},
 		type: 'post',
 		success: function(output) {
 			var result = JSON.parse(output);
@@ -2029,7 +2352,24 @@ var api = new function () {
 			}
 		});
 	},
-	submitGiftRedemptionOrder = function(sessionId, address, city, country, creditCardNumber, cvv, month, year, name) {
+	previewGiftRedemptionOrderCodeOnly = function(couponCode) {
+		jsonRequest = '{"RedemptionCode" : "' + couponCode + '"}}';
+		$.ajax({
+			url: subscriberEndpoint + "PreviewGiftRedemptionOrder",
+			data: jsonRequest,
+			headers:{
+				"CD-SystemID" : systemId,
+				"CD-SessionID" :  sessionId
+			},
+			type : 'post',
+			success : function(output) {
+				console.log(output);
+			},
+			error : function(output) {
+			}
+		});
+	},
+	submitGiftRedemptionOrder = function(sessionId, address, city, country, creditCardNumber, cvv, month, year, name, couponCode) {
 		jsonRequest = '{"PaymentInstruments":[{"BillingAddress" :{"City" : "' + city + '","Country" : "' + country + '","LineOne" : "' + address + '","Name" : "' + address + '", "ShipToName" : "' + name + '"},"CreditCard" : {"AccountNumber" : "' + creditCardNumber + '","Cvv" : "' + cvv + '","ExpirationMonth" : "' + month + '","ExpirationYear" : "' + year + '","NameOnCard" : "' + name + '","Type" : 1}, "Name" : "' + name + ' - ' + creditCardNumber.slice(-4) + '" ,"Default" : true}],"RedemptionCode" : "' + couponCode + '"}}';
 		$.ajax({
 			url: subscriberEndpoint + "SubmitGiftRedemptionOrder",
@@ -2175,6 +2515,7 @@ var api = new function () {
 		submitGiftOrderAsExisting : submitGiftOrderAsExisting,
 		submitAnonymousGiftOrder: submitAnonymousGiftOrder,
 		previewGiftRedemptionOrder: previewGiftRedemptionOrder,
+		previewGiftRedemptionOrderCodeOnly: previewGiftRedemptionOrderCodeOnly,
 		submitGiftRedemptionOrder : submitGiftRedemptionOrder,
 		searchProductsByCoupon : searchProductsByCoupon,
 		searchOrders: searchOrders,
@@ -2718,6 +3059,22 @@ var service = new function () {
 			}
 		});
 	},
+	previewGiftRedemptionOrderCodeOnly = function(couponCode) {
+		jsonRequest = '{"RedemptionCode" : "' + couponCode + '"}}';
+		return $.ajax({
+			url: subscriberEndpoint + "PreviewGiftRedemptionOrder",
+			data: jsonRequest,
+			headers:{
+				"CD-SystemID" : systemId//,
+				//"CD-SessionID" :  sessionId
+			},
+			type : 'post',
+			success : function(output) {
+			},
+			error : function(output) {
+			}
+		});
+	},
 	submitGiftRedemptionOrder = function(sessionId, address, city, country, creditCardNumber, cvv, month, year, name, couponCode) {
 		jsonRequest = '{"PaymentInstruments":[{"BillingAddress" :{"City" : "' + city + '","Country" : "' + country + '","LineOne" : "' + address + '","Name" : "' + address + '", "ShipToName" : "' + name + '"},"CreditCard" : {"AccountNumber" : "' + creditCardNumber + '","Cvv" : "' + cvv + '","ExpirationMonth" : "' + month + '","ExpirationYear" : "' + year + '","NameOnCard" : "' + name + '","Type" : 1}, "Name" : "' + name + ' - ' + creditCardNumber.slice(-4) + '" ,"Default" : true}],"RedemptionCode" : "' + couponCode + '"}}';
 		return $.ajax({
@@ -2761,7 +3118,6 @@ var service = new function () {
 			},
 			type : 'post',
 			success : function(output) {
-				console.log(output);
 			},
 			error : function(output) {
 			}
@@ -2840,6 +3196,7 @@ var service = new function () {
 		submitGiftOrderAsExisting : submitGiftOrderAsExisting,
 		submitAnonymousGiftOrder: submitAnonymousGiftOrder,
 		previewGiftRedemptionOrder: previewGiftRedemptionOrder,
+		previewGiftRedemptionOrderCodeOnly: previewGiftRedemptionOrderCodeOnly,
 		submitGiftRedemptionOrder : submitGiftRedemptionOrder,
 		submitGiftRedemptionOrderWithExisting : submitGiftRedemptionOrderWithExisting,
 		searchProductsByCoupon : searchProductsByCoupon,
@@ -3175,8 +3532,7 @@ var php = new function () {
 		submitCSROrderWithSubscriberId: submitCSROrderWithSubscriberId,
 		toggleOnAutorenewal: toggleOnAutorenewal,
 		emailLogin: emailLogin,
-		generatePassword: generatePassword,
-		generateToken: generateToken
+		generatePassword: generatePassword
 	};
 }();
 

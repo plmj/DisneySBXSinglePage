@@ -16,16 +16,16 @@
   </head>
 
   <body>
-  	<nav>
-			<ul>
-				<li><a href="index.html">Checkout</a></li>
-				<li><a href="giveGift.html">Give a gift (UK)</a></li>
-                <!--<li><a href="redeemGift.html">Redeem a gift</a></li>
-                <li><a href="paypal.html">PayPal</a></li>-->
-                <li><a href="redemption.html">Redeem Code</a></li>
-				<li><a href="accountManagement.html">Profile</a></li>
-			</ul>
-		</nav>
+    <nav>
+      <ul>
+          <li><a href="index.html">Checkout</a></li>
+          <li><a href="giveGift.html">Give a gift (UK)</a></li>
+          <!--<li><a href="redeemGift.html">Redeem a gift</a></li>
+          <li><a href="paypal.html">PayPal</a></li>-->
+          <li><a href="redemption.html">Redeem Code</a></li>
+          <li><a href="accountManagement.html">Profile</a></li>
+      </ul>
+    </nav>
   	<div class="orderCompletedError" style="display:none">
   		There's Been An Error<br />
   		This User Is Probably Already Subscribed<br />
@@ -38,19 +38,6 @@
   		<div class="selfCertifyText"></div>
   		<button id="selfCertifySubmit" class="btn btn-primary"><span>Check Out</span></button>
   	</div>
-  	<div class="pricingPlanSelect">
-			<label for="PlanCountry">Where are you?</label> 
-  		<select id="PlanCountry" name="PlanCountry">
-		    <option selected="" disabled="" label="month" value="">Country</option>
-		    <option label="United Kingdom - Short" value="SHORT" default>United Kingdom Short</option>
-		    <option label="United Kingdom" value="GBR" default>United Kingdom</option>
-		    <option label="France" value="FRA">France</option>
-		    <option label="Italy" value="ITA">Italy</option>
-		    <option label="Germany" value="DEU">Germany</option>
-		    <option label="Spain" value="ESP">Spain</option>
-			</select>
-  	</div>
-  	<ul class="selectPricingPlans" style="display:none">
   	</ul>
 		<form class="form-horizontal" style="display:none;">
 			<div class="form-section clearfix">
@@ -94,10 +81,10 @@
 			  		<select id="Country" name="Country">
 					    <option selected="" disabled="" label="month" value="">Country</option>
 					    <option label="United Kingdom" value="GBR">UK</option>
-					    <option label="France" value="FRA">France</option>
+					    <!--<option label="France" value="FRA">France</option>
 					    <option label="Italy" value="ITA">Italy</option>
 					    <option label="Germany" value="DEU">Germany</option>
-					    <option label="Spain" value="ESP">Spain</option>
+					    <option label="Spain" value="ESP">Spain</option>-->
 						</select>
 			  	</div>	  
 				</div>			
@@ -175,15 +162,6 @@
 					</div>			  
 				</div>	
 			</div>
-			<div class="form-section clearfix">
-				<h2 class="form-subtitle"><span>+ Coupon</span></h2>
-				<div class="form-group form-group-coupon" style="opacity:0;">
-					<div class="col-md-12"> 			  
-				  	<input id="CouponCode" name="CouponCode" placeholder="Coupon Code" class="form-control input-md" required="" type="text">			    
-				  </div>
-				</div>	
-			</div>
-			<div class="error" style="opacity:0;">Could not validate coupon code. Please try again.</div>
 			<div class="form-section clearfix">
 				<button id="Submit" name="Submit" class="btn btn-primary"><span>Check Out</span></button>
 			</div>

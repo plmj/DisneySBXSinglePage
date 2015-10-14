@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="//cdn.rawgit.com/jpillora/xdomain/0.7.3/dist/xdomain.min.js" slave="https://services.sbx1.cdops.net/CrossDomainServiceWrapper.html"></script>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/main.css" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Checkout</a></li>
+            <li><a href="giveGift.html">Give a gift (UK)</a></li>
+            <!--<li><a href="redeemGift.html">Redeem a gift</a></li>
+            <li><a href="paypal.html">PayPal</a></li>-->
+            <li><a href="redemption.html">Redeem Code</a></li>
+            <li><a href="accountManagement.html">Profile</a></li>
+        </ul>
+    </nav>
+    <div id="redemptionContainer">
+        <input id="redemptionCode" name="redemptionCode" placeholder="Redemption Code" class="form-control input-md" required="" type="text">
+        <div class="errorMessage"></div>
+        <button id="submitRedemptionCode">Redeem</button>
+        <div class="subscriberStatusContainer clearfix" style="display:none;">
+            <div class="subscriberStatusQuestion">Are you an existing subscriber?</div>
+            <div class="subscriberStatusAnswer">
+                <div class="subscriberStatusNo">No</div>
+                <div class="subscriberStatusYes">Yes</div>
+            </div>
+        </div>
+    </div>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="./js/jquery.inputmask.js" type="text/javascript"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/disney.js"></script>
+</body>
+</html>
